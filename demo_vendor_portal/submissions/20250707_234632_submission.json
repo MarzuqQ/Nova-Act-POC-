@@ -1,0 +1,14 @@
+{
+  "shipper_name": "Global Shipping Solutions Inc.",
+  "shipper_address": "1234 Industrial Blvd\r\nWarehouse District\r\nSeattle, WA 98101",
+  "recipient_name": "Pacific Coast Logistics",
+  "recipient_address": "567 Harbor View Drive\r\nSuite 200\r\nSan Francisco, CA 94111",
+  "package_weight": "45.5",
+  "package_dimensions": "24x18x12",
+  "shipping_date": "2024-01-15",
+  "tracking_number": "GS2024010001",
+  "special_instructions": "Handle with care - fragile electronics inside. Signature required upon delivery. Please call recipient before delivery attempt.",
+  "submitted_by": "shipping_admin",
+  "submitted_at": "2025-07-07T23:46:32.782735",
+  "uploaded_file": "20250707_234632_shipment_data.json"
+}

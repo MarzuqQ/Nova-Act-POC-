@@ -1,0 +1,21 @@
+{
+  "automation_run": {
+    "timestamp": "2025-07-07T21:47:50.966597",
+    "config": {
+      "portal_url": "http://localhost:5000",
+      "username": "shipping_admin",
+      "password": "secure_pass123",
+      "data_file": "/Users/marzuqq/Documents/Nova Act POC WWEX/sample_data/shipment_data.json",
+      "upload_file": "/Users/marzuqq/Documents/Nova Act POC WWEX/sample_data/shipment_data.json",
+      "output_bucket": "",
+      "aws_region": "us-east-1",
+      "timeout": 300,
+      "headless": false,
+      "nova_act_api_key": "717e3076-ae10-4853-b9cc-7819b67f056c"
+    },
+    "confirmation": {
+      "error": "\n\nActAgentError(\n    message = The confirmation number, submission time, and status are not available on the page\n    metadata = ActMetadata(\n        session_id = 3d62596b-8555-4ae3-94c8-a8d68fe49e6d\n        act_id = 9046fe3e-b567-41ed-8980-203877f1fa64\n        num_steps_executed = 4\n        start_time = 2025-07-07 21:47:18.304683 CDT\n        end_time = 2025-07-07 21:47:50.240039 CDT\n        prompt = 'Extract the confirmation number, submission time, and status from the success page, format output with jsonschema: {\"properties\": {\"confirmation_number\": {\"title\": \"Confirmation Number\", \"type\": \"string\"}, \"submission_time\": {\"title\": \"Submission Time\", \"type\": \"string\"}, \"status\": {\"title\": \"Status\", \"type\": \"string\"}}, \"required\": [\"confirmation_number\", \"submission_time\", \"status\"], \"title\": \"ConfirmationData\", \"type\": \"object\"}'\n    )\n)\n\nPlease consider providing feedback: https://amazonexteu.qualtrics.com/jfe/form/SV_bd8dHa7Em6kNkMe",
+      "timestamp": "2025-07-07T21:47:50.966589"
+    }
+  }
+}

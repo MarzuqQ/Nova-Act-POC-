@@ -1,0 +1,13 @@
+{
+  "from_name": "Express Logistics LLC",
+  "from_addr": "2468 Warehouse Blvd; Atlanta, GA 30309",
+  "to_name": "Retail Distribution Hub",
+  "to_addr": "1357 Commerce Center; Miami, FL 33101",
+  "gross_weight": 33.2,
+  "lwh": "20x15x10",
+  "awb_number": "EL2024030001",
+  "dispatch_date": "03/15/2024",
+  "remarks": "Fragile items - this side up only. Call before delivery.",
+  "service_type": "ground",
+  "insurance_value": 500.00
+} 

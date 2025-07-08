@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Vendor Portal{% endblock %}
+
+{% block extra_styles %}
+<style>
+    .dashboard-container {
+        max-width: 600px;
+        margin: 2rem auto;
+        text-align: center;
+    }
+    
+    .dashboard-title {
+        color: #007cba;
+        margin-bottom: 2rem;
+        font-size: 2rem;
+        font-weight: 300;
+    }
+    
+    .shipment-card {
+        background: white;
+        padding: 3rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .shipment-card h3 {
+        color: #007cba;
+        margin-bottom: 1rem;
+        font-size: 1.5rem;
+    }
+    
+    .shipment-card p {
+        color: #6c757d;
+        margin-bottom: 2rem;
+    }
+    
+    .btn-primary {
+        background: #007cba;
+        color: white;
+        padding: 1rem 2rem;
+        border: none;
+        border-radius: 4px;
+        text-decoration: none;
+        font-size: 1.1rem;
+        font-weight: 500;
+        transition: background 0.3s;
+    }
+    
+    .btn-primary:hover {
+        background: #005a8a;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <h1 class="dashboard-title">Welcome, {{ session.username }}!</h1>
+    <p style="text-align: center; color: #6c757d; margin-bottom: 2rem;">Manage your shipments and logistics efficiently.</p>
+    
+    <div class="shipment-card">
+        <h3>📦 New Shipment</h3>
+        <p>Create and submit a new shipment form with automated data entry.</p>
+        <a href="{{ url_for('shipment_form') }}" class="btn-primary">Create New Shipment</a>
+    </div>
+</div>
+{% endblock %} 

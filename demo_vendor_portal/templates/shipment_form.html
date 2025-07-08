@@ -1,0 +1,238 @@
+{% extends "base.html" %}
+
+{% block title %}New Shipment Form - Vendor Portal{% endblock %}
+
+{% block extra_styles %}
+<style>
+    .form-container {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    
+    .form-section {
+        background: white;
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        margin-bottom: 2rem;
+    }
+    
+    .form-section h3 {
+        color: #007cba;
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #e9ecef;
+    }
+    
+    .form-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;
+    }
+    
+    .file-upload-section {
+        background: #f8f9fa;
+        padding: 1.5rem;
+        border-radius: 8px;
+        border: 2px dashed #007cba;
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    
+    .file-upload-section h4 {
+        color: #007cba;
+        margin-bottom: 1rem;
+    }
+    
+    .file-upload-section p {
+        color: #6c757d;
+        margin-bottom: 1rem;
+    }
+    
+    .form-actions {
+        display: flex;
+        gap: 1rem;
+        justify-content: flex-end;
+        margin-top: 2rem;
+    }
+    
+    .btn-cancel {
+        background: #6c757d;
+        color: white;
+        text-decoration: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 4px;
+        border: none;
+        cursor: pointer;
+        font-size: 1rem;
+    }
+    
+    .btn-cancel:hover {
+        background: #545b62;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <div class="content">
+        <h2>📦 New Shipment Form</h2>
+        <p>Fill out the form below to create a new shipment. All fields marked with <span class="required">*</span> are required.</p>
+    </div>
+
+    <form method="POST" enctype="multipart/form-data">
+        <!-- File Upload Section -->
+        <div class="file-upload-section">
+            <h4>📁 Upload Shipment Document</h4>
+            <p>Upload a JSON, PDF, or other document related to this shipment (optional)</p>
+            <div class="form-group">
+                <input type="file" id="shipment_document" name="shipment_document" accept=".json,.pdf,.txt,.csv,.xml">
+            </div>
+        </div>
+
+        <!-- Shipper Information -->
+        <div class="form-section">
+            <h3>📍 Shipper Information</h3>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="shipper_name">Shipper Name <span class="required">*</span></label>
+                    <input type="text" id="shipper_name" name="shipper_name" required 
+                           placeholder="Enter the full name of the shipping company">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="shipper_address">Shipper Address <span class="required">*</span></label>
+                <textarea id="shipper_address" name="shipper_address" required 
+                          placeholder="Enter the complete shipping address including street, city, state, and zip code"></textarea>
+            </div>
+        </div>
+
+        <!-- Recipient Information -->
+        <div class="form-section">
+            <h3>📍 Recipient Information</h3>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="recipient_name">Recipient Name <span class="required">*</span></label>
+                    <input type="text" id="recipient_name" name="recipient_name" required 
+                           placeholder="Enter the full name of the recipient">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="recipient_address">Recipient Address <span class="required">*</span></label>
+                <textarea id="recipient_address" name="recipient_address" required 
+                          placeholder="Enter the complete delivery address including street, city, state, and zip code"></textarea>
+            </div>
+        </div>
+
+        <!-- Package Information -->
+        <div class="form-section">
+            <h3>📦 Package Information</h3>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="package_weight">Package Weight <span class="required">*</span></label>
+                    <input type="text" id="package_weight" name="package_weight" required 
+                           placeholder="e.g., 5.2 lbs">
+                </div>
+                <div class="form-group">
+                    <label for="package_dimensions">Package Dimensions <span class="required">*</span></label>
+                    <input type="text" id="package_dimensions" name="package_dimensions" required 
+                           placeholder="e.g., 12 x 8 x 6 inches">
+                </div>
+            </div>
+        </div>
+
+        <!-- Shipping Details -->
+        <div class="form-section">
+            <h3>🚚 Shipping Details</h3>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="tracking_number">Tracking Number <span class="required">*</span></label>
+                    <input type="text" id="tracking_number" name="tracking_number" required 
+                           placeholder="Enter the tracking number">
+                </div>
+                <div class="form-group">
+                    <label for="shipping_date">Shipping Date <span class="required">*</span></label>
+                    <input type="date" id="shipping_date" name="shipping_date" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="special_instructions">Special Instructions</label>
+                <textarea id="special_instructions" name="special_instructions" 
+                          placeholder="Enter any special handling instructions or delivery notes (optional)"></textarea>
+            </div>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="form-actions">
+            <a href="{{ url_for('dashboard') }}" class="btn-cancel">Cancel</a>
+            <button type="submit" class="btn">Submit Shipment</button>
+        </div>
+    </form>
+</div>
+
+{% block extra_scripts %}
+<script>
+    // Set today's date as default shipping date
+    document.addEventListener('DOMContentLoaded', function() {
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('shipping_date').value = today;
+    });
+
+    // JavaScript Auto-Fill Functionality
+    document.getElementById('shipment_document').addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        
+        if (!file) {
+            return;
+        }
+
+        if (file.type !== 'application/json') {
+            return; // Only process JSON files
+        }
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const data = JSON.parse(e.target.result);
+                
+                // Auto-fill form fields with data from JSON
+                if (data.shipper_name) {
+                    document.getElementById('shipper_name').value = data.shipper_name;
+                }
+                if (data.shipper_address) {
+                    document.getElementById('shipper_address').value = data.shipper_address;
+                }
+                if (data.recipient_name) {
+                    document.getElementById('recipient_name').value = data.recipient_name;
+                }
+                if (data.recipient_address) {
+                    document.getElementById('recipient_address').value = data.recipient_address;
+                }
+                if (data.package_weight) {
+                    document.getElementById('package_weight').value = data.package_weight;
+                }
+                if (data.package_dimensions) {
+                    document.getElementById('package_dimensions').value = data.package_dimensions;
+                }
+                if (data.tracking_number) {
+                    document.getElementById('tracking_number').value = data.tracking_number;
+                }
+                if (data.shipping_date) {
+                    document.getElementById('shipping_date').value = data.shipping_date;
+                }
+                if (data.special_instructions) {
+                    document.getElementById('special_instructions').value = data.special_instructions;
+                }
+
+                console.log('Form auto-filled successfully from JSON file');
+                
+            } catch (error) {
+                console.error('Error parsing JSON file:', error);
+            }
+        };
+        
+        reader.readAsText(file);
+    });
+</script>
+{% endblock %}
+{% endblock %} 

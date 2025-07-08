@@ -1,0 +1,24 @@
+{
+  "automation_run": {
+    "timestamp": "2025-07-08T01:19:46.230029",
+    "config": {
+      "portal_url": "http://localhost:5000",
+      "username": "shipping_admin",
+      "password": "secure_pass123",
+      "data_file": "/Users/marzuqq/Documents/Nova Act POC WWEX/sample_data/shipment_data.json",
+      "upload_file": "/Users/marzuqq/Documents/Nova Act POC WWEX/sample_data/shipment_data.json",
+      "output_bucket": "",
+      "aws_region": "us-east-1",
+      "timeout": 300,
+      "headless": false,
+      "nova_act_api_key": "717e3076-ae10-4853-b9cc-7819b67f056c",
+      "use_manual_filling": true
+    },
+    "confirmation": {
+      "confirmation_number": "CONF-20250708011923-KKXH",
+      "submission_time": "2025-07-08 01:19:23",
+      "status": "Submitted",
+      "timestamp": "2025-07-08T01:19:46.229880"
+    }
+  }
+}

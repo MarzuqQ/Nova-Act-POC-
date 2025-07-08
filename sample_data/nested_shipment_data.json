@@ -1,0 +1,25 @@
+{
+  "shipment": {
+    "sender": {
+      "name": "TechCorp Industries",
+      "address": "4567 Technology Drive\nSuite 300\nAustin, TX 78701"
+    },
+    "receiver": {
+      "name": "Innovation Labs",
+      "address": "890 Research Park\nBuilding B\nBoston, MA 02101"
+    },
+    "package": {
+      "weight": "12.7 lbs",
+      "dimensions": "16x12x8 inches",
+      "reference": "TC2024020001"
+    },
+    "schedule": {
+      "pickup_date": "2024-02-01",
+      "notes": "Priority delivery - contains sensitive equipment"
+    },
+    "metadata": {
+      "created_by": "automated_system",
+      "service_level": "express"
+    }
+  }
+} 
