@@ -5,55 +5,101 @@
 {% block extra_styles %}
 <style>
     .form-container {
-        max-width: 800px;
+        max-width: 1200px;
         margin: 0 auto;
+        padding: 1rem;
+    }
+    
+    .content {
+        margin-bottom: 1rem;
+    }
+    
+    .content h2 {
+        margin-bottom: 0.5rem;
     }
     
     .form-section {
         background: white;
-        padding: 2rem;
+        padding: 1rem;
         border-radius: 8px;
         box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        margin-bottom: 2rem;
+        margin-bottom: 1rem;
     }
     
     .form-section h3 {
         color: #007cba;
-        margin-bottom: 1.5rem;
-        padding-bottom: 0.5rem;
+        margin-bottom: 0.75rem;
+        padding-bottom: 0.25rem;
         border-bottom: 2px solid #e9ecef;
+        font-size: 1.1rem;
     }
     
     .form-row {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
         gap: 1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .form-row.two-column {
+        grid-template-columns: 1fr 1fr;
+    }
+    
+    .form-row.three-column {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+    
+    .form-group {
+        margin-bottom: 0.75rem;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 0.25rem;
+        font-weight: 500;
+    }
+    
+    .form-group input, .form-group textarea {
+        width: 100%;
+        padding: 0.5rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 0.9rem;
+    }
+    
+    .form-group textarea {
+        height: 60px;
+        resize: vertical;
     }
     
     .file-upload-section {
         background: #f8f9fa;
-        padding: 1.5rem;
+        padding: 1rem;
         border-radius: 8px;
         border: 2px dashed #007cba;
         text-align: center;
-        margin-bottom: 2rem;
+        margin-bottom: 1rem;
     }
     
     .file-upload-section h4 {
         color: #007cba;
-        margin-bottom: 1rem;
+        margin-bottom: 0.5rem;
+        font-size: 1rem;
     }
     
     .file-upload-section p {
         color: #6c757d;
-        margin-bottom: 1rem;
+        margin-bottom: 0.75rem;
+        font-size: 0.9rem;
     }
     
     .form-actions {
         display: flex;
         gap: 1rem;
         justify-content: flex-end;
-        margin-top: 2rem;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid #e9ecef;
     }
     
     .btn-cancel {
@@ -69,6 +115,28 @@
     
     .btn-cancel:hover {
         background: #545b62;
+    }
+    
+    /* Compact layout for better screen usage */
+    .main-form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+    
+    .left-column, .right-column {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    @media (max-width: 768px) {
+        .main-form-grid {
+            grid-template-columns: 1fr;
+        }
+        .form-row.two-column, .form-row.three-column {
+            grid-template-columns: 1fr;
+        }
     }
 </style>
 {% endblock %}
@@ -90,75 +158,80 @@
             </div>
         </div>
 
-        <!-- Shipper Information -->
-        <div class="form-section">
-            <h3>📍 Shipper Information</h3>
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="shipper_name">Shipper Name <span class="required">*</span></label>
-                    <input type="text" id="shipper_name" name="shipper_name" required 
-                           placeholder="Enter the full name of the shipping company">
+        <div class="main-form-grid">
+            <!-- Left Column -->
+            <div class="left-column">
+                <!-- Shipper Information -->
+                <div class="form-section">
+                    <h3>📍 Shipper Information</h3>
+                    <div class="form-group">
+                        <label for="shipper_name">Shipper Name <span class="required">*</span></label>
+                        <input type="text" id="shipper_name" name="shipper_name" required 
+                               placeholder="Enter the full name of the shipping company">
+                    </div>
+                    <div class="form-group">
+                        <label for="shipper_address">Shipper Address <span class="required">*</span></label>
+                        <textarea id="shipper_address" name="shipper_address" required 
+                                  placeholder="Enter the complete shipping address"></textarea>
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <label for="shipper_address">Shipper Address <span class="required">*</span></label>
-                <textarea id="shipper_address" name="shipper_address" required 
-                          placeholder="Enter the complete shipping address including street, city, state, and zip code"></textarea>
-            </div>
-        </div>
 
-        <!-- Recipient Information -->
-        <div class="form-section">
-            <h3>📍 Recipient Information</h3>
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="recipient_name">Recipient Name <span class="required">*</span></label>
-                    <input type="text" id="recipient_name" name="recipient_name" required 
-                           placeholder="Enter the full name of the recipient">
+                <!-- Package Information -->
+                <div class="form-section">
+                    <h3>📦 Package Information</h3>
+                    <div class="form-row two-column">
+                        <div class="form-group">
+                            <label for="package_weight">Package Weight <span class="required">*</span></label>
+                            <input type="text" id="package_weight" name="package_weight" required 
+                                   placeholder="e.g., 5.2 lbs">
+                        </div>
+                        <div class="form-group">
+                            <label for="package_dimensions">Package Dimensions <span class="required">*</span></label>
+                            <input type="text" id="package_dimensions" name="package_dimensions" required 
+                                   placeholder="e.g., 12 x 8 x 6 inches">
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="form-group">
-                <label for="recipient_address">Recipient Address <span class="required">*</span></label>
-                <textarea id="recipient_address" name="recipient_address" required 
-                          placeholder="Enter the complete delivery address including street, city, state, and zip code"></textarea>
-            </div>
-        </div>
 
-        <!-- Package Information -->
-        <div class="form-section">
-            <h3>📦 Package Information</h3>
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="package_weight">Package Weight <span class="required">*</span></label>
-                    <input type="text" id="package_weight" name="package_weight" required 
-                           placeholder="e.g., 5.2 lbs">
+            <!-- Right Column -->
+            <div class="right-column">
+                <!-- Recipient Information -->
+                <div class="form-section">
+                    <h3>📍 Recipient Information</h3>
+                    <div class="form-group">
+                        <label for="recipient_name">Recipient Name <span class="required">*</span></label>
+                        <input type="text" id="recipient_name" name="recipient_name" required 
+                               placeholder="Enter the full name of the recipient">
+                    </div>
+                    <div class="form-group">
+                        <label for="recipient_address">Recipient Address <span class="required">*</span></label>
+                        <textarea id="recipient_address" name="recipient_address" required 
+                                  placeholder="Enter the complete delivery address"></textarea>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="package_dimensions">Package Dimensions <span class="required">*</span></label>
-                    <input type="text" id="package_dimensions" name="package_dimensions" required 
-                           placeholder="e.g., 12 x 8 x 6 inches">
-                </div>
-            </div>
-        </div>
 
-        <!-- Shipping Details -->
-        <div class="form-section">
-            <h3>🚚 Shipping Details</h3>
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="tracking_number">Tracking Number <span class="required">*</span></label>
-                    <input type="text" id="tracking_number" name="tracking_number" required 
-                           placeholder="Enter the tracking number">
+                <!-- Shipping Details -->
+                <div class="form-section">
+                    <h3>🚚 Shipping Details</h3>
+                    <div class="form-row two-column">
+                        <div class="form-group">
+                            <label for="tracking_number">Tracking Number <span class="required">*</span></label>
+                            <input type="text" id="tracking_number" name="tracking_number" required 
+                                   placeholder="Enter the tracking number">
+                        </div>
+                        <div class="form-group">
+                            <label for="shipping_date">Shipping Date <span class="required">*</span></label>
+                            <input type="text" id="shipping_date" name="shipping_date" required 
+                                   placeholder="MM/DD/YYYY">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="special_instructions">Special Instructions</label>
+                        <textarea id="special_instructions" name="special_instructions" 
+                                  placeholder="Enter any special handling instructions or delivery notes (optional)"></textarea>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="shipping_date">Shipping Date <span class="required">*</span></label>
-                    <input type="date" id="shipping_date" name="shipping_date" required>
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="special_instructions">Special Instructions</label>
-                <textarea id="special_instructions" name="special_instructions" 
-                          placeholder="Enter any special handling instructions or delivery notes (optional)"></textarea>
             </div>
         </div>
 
@@ -172,10 +245,14 @@
 
 {% block extra_scripts %}
 <script>
-    // Set today's date as default shipping date
+    // Set today's date as default shipping date in MM/DD/YYYY format
     document.addEventListener('DOMContentLoaded', function() {
-        const today = new Date().toISOString().split('T')[0];
-        document.getElementById('shipping_date').value = today;
+        const today = new Date();
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const day = String(today.getDate()).padStart(2, '0');
+        const year = today.getFullYear();
+        const formattedDate = `${month}/${day}/${year}`;
+        document.getElementById('shipping_date').value = formattedDate;
     });
 
     // JavaScript Auto-Fill Functionality

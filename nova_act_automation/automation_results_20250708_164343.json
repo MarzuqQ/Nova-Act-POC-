@@ -1,0 +1,22 @@
+{
+  "automation_run": {
+    "timestamp": "2025-07-08T16:43:43.102537",
+    "config": {
+      "portal_url": "http://localhost:5000",
+      "username": "shipping_admin",
+      "password": "secure_pass123",
+      "data_file": "/Users/marzuqq/Documents/Nova-Act-POC-/sample_data/shipment_data.json",
+      "upload_file": "/Users/marzuqq/Documents/Nova-Act-POC-/sample_data/shipment_data.json",
+      "output_bucket": "",
+      "aws_region": "us-east-1",
+      "timeout": 300,
+      "headless": false,
+      "nova_act_api_key": "717e3076-ae10-4853-b9cc-7819b67f056c",
+      "use_manual_filling": true
+    },
+    "confirmation": {
+      "error": "\n\nActAgentError(\n    message = The task cannot be completed because the required information is not available.\n    metadata = ActMetadata(\n        session_id = ec52e018-7f5d-485c-8c90-fd7adee91f5e\n        act_id = 22466078-ba24-4bef-9bcb-d1e8e6c207eb\n        num_steps_executed = 2\n        start_time = 2025-07-08 16:43:30.024212 CDT\n        end_time = 2025-07-08 16:43:42.721132 CDT\n        prompt = 'Extract the confirmation number, submission time, and status from the success page, format output with jsonschema: {\"properties\": {\"confirmation_number\": {\"title\": \"Confirmation Number\", \"type\": \"string\"}, \"submission_time\": {\"title\": \"Submission Time\", \"type\": \"string\"}, \"status\": {\"title\": \"Status\", \"type\": \"string\"}}, \"required\": [\"confirmation_number\", \"submission_time\", \"status\"], \"title\": \"ConfirmationData\", \"type\": \"object\"}'\n    )\n)\n\nPlease consider providing feedback: https://amazonexteu.qualtrics.com/jfe/form/SV_bd8dHa7Em6kNkMe",
+      "timestamp": "2025-07-08T16:43:43.102530"
+    }
+  }
+}

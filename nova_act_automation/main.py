@@ -69,7 +69,7 @@ class NovaActAutomation:
             'nova_act_api_key': os.getenv('NOVA_ACT_API_KEY', '717e3076-ae10-4853-b9cc-7819b67f056c'),
             
             # AUTOMATION MODE: Change this line to switch between manual and auto-fill modes
-            'use_manual_filling': True  # Set to False for auto-fill mode
+            'use_manual_filling': False  # Set to False for auto-fill mode
         }
         
         logger.info(f"Configuration loaded: {config}")
@@ -201,25 +201,7 @@ class NovaActAutomation:
             
             # Fill shipping date
             if data.get('shipping_date'):
-                # Convert date to current date if it's in the past
-                try:
-                    # Parse the date from the data
-                    parsed_date = datetime.strptime(data['shipping_date'], '%Y-%m-%d').date()
-                    today = date.today()
-                    
-                    # If the date is in the past, use today's date
-                    if parsed_date < today:
-                        formatted_date = today.strftime('%Y-%m-%d')
-                        logger.info(f"Date {data['shipping_date']} is in the past, using today's date: {formatted_date}")
-                    else:
-                        formatted_date = data['shipping_date']
-                    
-                    # Try different approaches for date entry
-                    nova.act(f"Click on the shipping date field and enter the date '{formatted_date}' or select today's date")
-                except ValueError:
-                    # If date parsing fails, just use the original date
-                    logger.warning(f"Could not parse date {data['shipping_date']}, using as-is")
-                    nova.act(f"Click on the shipping date field and enter '{data['shipping_date']}'")
+                nova.act(f"Enter '{data['shipping_date']}' in the shipping date field")
             
             # Fill special instructions
             if data.get('special_instructions'):
