@@ -69,7 +69,7 @@ class NovaActAutomation:
             'nova_act_api_key': os.getenv('NOVA_ACT_API_KEY', '717e3076-ae10-4853-b9cc-7819b67f056c'),
             
             # AUTOMATION MODE: Change this line to switch between manual and auto-fill modes
-            'use_manual_filling': False  # Set to False for auto-fill mode
+            'use_manual_filling': True  # Set to False for auto-fill mode
         }
         
         logger.info(f"Configuration loaded: {config}")
@@ -122,7 +122,7 @@ class NovaActAutomation:
             nova.act("Click the login button to submit the form")
             
             # Wait for dashboard to load
-            time.sleep(2)
+            # time.sleep(2)
             
             logger.info("Successfully logged into portal")
         except Exception as e:
@@ -135,7 +135,7 @@ class NovaActAutomation:
             logger.info("Navigating to shipment form...")
             
             # Wait a moment for page to fully load
-            time.sleep(1)
+            # time.sleep(1)
             
             # Click on the shipment form link with retry logic
             for attempt in range(3):
@@ -149,7 +149,7 @@ class NovaActAutomation:
                     time.sleep(2)
             
             # Wait for form to load
-            time.sleep(3)
+            # time.sleep(3)
             
             logger.info("Navigated to shipment form")
         except Exception as e:
@@ -169,6 +169,7 @@ class NovaActAutomation:
             logger.info("Using AUTO-FILL mode (JSON upload)")
             self.upload_json_and_autofill(nova)
     
+    # Function used when manually filling the form
     def fill_shipment_form(self, nova: NovaAct, data: Dict[str, Any]) -> None:
         """Fill the shipment form with data using Nova Act"""
         try:
@@ -229,6 +230,7 @@ class NovaActAutomation:
             logger.error(f"Failed to fill shipment form: {e}")
             raise
     
+    # Function used when auto-filling the form
     def upload_json_and_autofill(self, nova: NovaAct) -> None:
         """Upload JSON file using proper Nova Act + Playwright approach"""
         try:
@@ -260,7 +262,7 @@ class NovaActAutomation:
             logger.info("File uploaded successfully using Playwright")
             
             # Step 3: Wait for any auto-processing to complete
-            time.sleep(3)
+            # time.sleep(3)
             
             # Step 4: Use Nova Act to verify the upload was successful
             nova.act("Check if the file upload was successful and if form fields were auto-populated")
@@ -283,7 +285,7 @@ class NovaActAutomation:
             nova.act("Click the submit button to submit the shipment form")
             
             # Wait for submission to complete
-            time.sleep(3)
+            # time.sleep(3)
             
             logger.info("Form submitted successfully")
         except Exception as e:
