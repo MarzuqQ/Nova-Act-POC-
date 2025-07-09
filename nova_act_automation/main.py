@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Nova Act Automation Script for Vendor Portal
+Nova Act POC: Automation Script for Vendor Portal
 This script demonstrates automated web form interactions using Amazon Nova Act.
 """
 
@@ -22,17 +22,6 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger(__name__)
-
-class FormData(BaseModel):
-    shipper_name: str
-    shipper_address: str
-    recipient_name: str
-    recipient_address: str
-    package_weight: str
-    package_dimensions: str
-    tracking_number: str
-    shipping_date: str
-    special_instructions: str
 
 class ConfirmationData(BaseModel):
     confirmation_number: str

@@ -1,6 +1,6 @@
 {
   "automation_run": {
-    "timestamp": "2025-07-08T22:31:43.902854",
+    "timestamp": "2025-07-09T10:34:21.246831",
     "config": {
       "portal_url": "http://localhost:5000",
       "username": "shipping_admin",
@@ -15,10 +15,10 @@
       "use_manual_filling": false
     },
     "confirmation": {
-      "confirmation_number": "CONF-20250708223124-2OS1",
-      "submission_time": "2025-07-08 22:31:24",
+      "confirmation_number": "CONF-20250709103403-8ORO",
+      "submission_time": "2025-07-09 10:34:03",
       "status": "Submitted",
-      "timestamp": "2025-07-08T22:31:43.902740"
+      "timestamp": "2025-07-09T10:34:21.246725"
     }
   }
 }
