@@ -135,7 +135,7 @@ This POC supports **two automation modes** configurable in `nova_act_automation/
 ```
 
 **How it works:**
-1. Nova Act uploads the JSON file using playwrite to the portal
+1. Nova Act uploads the JSON file using playwright to the portal
 2. Frontend JavaScript automatically fills all form fields
 3. Nova Act submits the form
 

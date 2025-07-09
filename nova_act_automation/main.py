@@ -114,7 +114,7 @@ class NovaActAutomation:
             logger.info("Logging into vendor portal...")
             
             # Handle any cookie banners or promotional offers
-            nova.act("Close any cookie banners or promotional offers if they appear")
+            # nova.act("Close any cookie banners or promotional offers if they appear")
             
             # Fill in login credentials and submit
             nova.act(f"Enter '{self.config['username']}' in the username field")
@@ -236,7 +236,7 @@ class NovaActAutomation:
             # Step 1: Use Nova Act to locate and prepare the file upload element
             nova.act("Locate the file upload input field on the form")
             
-            # Step 2: Use Playwright to handle the actual file selection (recommended approach)
+            # Step 2: Use Playwright to handle the actual file selection
             # This bypasses the system dialog issue
             file_input = nova.page.locator('input[type="file"]')
             file_input.set_input_files(str(absolute_path))
@@ -264,6 +264,7 @@ class NovaActAutomation:
             logger.info("Submitting shipment form...")
             
             # Submit the form
+            # nova.act("Search for the submit button on the page")
             nova.act("Click the submit button to submit the shipment form")
             
             # Wait for submission to complete
@@ -375,7 +376,7 @@ class NovaActAutomation:
                 self.navigate_to_shipment_form(nova)
                 
                 # Process shipment form (mode determined by config)
-                self.process_shipment_form(nova, shipment_data)
+                self.process_shipment_form(nova, shipment_data) # shipment_data = parsed json data
                 
                 # Submit the form
                 self.submit_form(nova)
