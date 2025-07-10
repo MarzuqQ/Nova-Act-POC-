@@ -63,83 +63,106 @@ The POC includes a sophisticated **JsonParser** that handles diverse data format
 
 ```
 Nova-Act-POC-/
-├── demo_vendor_portal/          # Demo web portal for testing
-│   ├── app.py                   # Flask application with authentication
-│   ├── templates/               # Responsive HTML templates
-│   │   ├── base.html           # Base template with modern UI
-│   │   ├── login.html          # Login page
-│   │   ├── dashboard.html      # Dashboard
-│   │   ├── shipment_form.html  # Advanced form with auto-fill JavaScript
-│   │   └── submission_success.html # Success confirmation page
-│   ├── requirements.txt         # Python dependencies
-│   ├── uploads/                 # File upload directory (timestamped)
-│   └── submissions/             # Form submission results (JSON)
-├── nova_act_automation/         # Main automation code
-│   ├── main.py                  # Primary automation script with preview features
-│   ├── json_parser.py           # Intelligent JSON parsing (318 lines)
-│   ├── file_utils.py            # Advanced file handling (246 lines)
-│   ├── requirements.txt         # Python dependencies
-│   └── automation_results_*.json # Automation results with timestamps
-├── sample_data/                 # Sample JSON files in different formats
-│   ├── shipment_data.json       # Standard format
-│   ├── nested_shipment_data.json # Nested structure format
-│   └── alternative_format.json  # Alternative field names format
-├── examples/                    # Example scripts and tests
-│   ├── simple_nova_act_example.py # Comprehensive Nova Act examples
-│   └── test_nova_act.py         # Basic SDK testing
-└── README.md                    # This file
+├── README.md                    # This documentation
+├── .gitignore                   # Git ignore patterns
+├── .gitattributes               # Git attributes
+├── docker/                      # Docker configuration
+│   ├── docker-compose.yml       # Multi-service orchestration
+│   ├── docker.env.template      # Environment template
+│   └── DOCKER.md                # Docker documentation
+├── src/                         # Source code
+│   ├── automation/              # Nova Act automation
+│   │   ├── Dockerfile           # Automation container
+│   │   ├── main.py              # Primary automation orchestrator (401 lines)
+│   │   ├── json_parser.py       # Intelligent JSON parsing (318 lines)
+│   │   ├── file_utils.py        # Advanced file handling (246 lines)
+│   │   ├── requirements.txt     # Python dependencies
+│   │   └── wait-for-it.sh       # Service dependency script
+│   └── portal/                  # Demo vendor portal
+│       ├── Dockerfile           # Portal container
+│       ├── app.py               # Flask application with authentication
+│       ├── templates/           # Responsive HTML templates
+│       │   ├── base.html        # Base template with modern UI
+│       │   ├── login.html       # Login page
+│       │   ├── dashboard.html   # Dashboard
+│       │   ├── shipment_form.html # Advanced form with auto-fill JavaScript
+│       │   └── submission_success.html # Success confirmation page
+│       └── requirements.txt     # Flask dependencies
+├── data/                        # All data files
+│   ├── samples/                 # Sample JSON files in different formats
+│   │   ├── shipment_data.json   # Standard format
+│   │   ├── nested_shipment_data.json # Nested structure format
+│   │   └── alternative_format.json # Alternative field names format
+│   ├── uploads/                 # File uploads (shared between services)
+│   ├── submissions/             # Form submissions (shared between services)
+│   └── results/                 # Automation results (shared between services)
+└── examples/                    # Example scripts and tests
+    ├── simple_nova_act_example.py # Comprehensive Nova Act examples
+    └── test_nova_act.py         # Basic SDK testing
 ```
 
 ## 🚀 Quick Start
 
-### Prerequisites
-- Python 3.8+
-- **Nova Act API Key** (required)
-- Basic familiarity with command line
+### Option 1: Docker (Recommended)
 
-### 1. Get Nova Act API Key
-1. Visit [nova.amazon.com](https://nova.amazon.com) and sign in
-2. Navigate to the **Act** section
-3. Generate your API key
+**Prerequisites:**
+- Docker and Docker Compose
+- Nova Act API Key
 
-### 2. Clone and Setup
+**Setup:**
 ```bash
+# 1. Clone repository
 git clone <your-repo-url>
 cd Nova-Act-POC-
+
+# 2. Configure environment
+cp docker/docker.env.template .env
+# Edit .env and add your Nova Act API key
+
+# 3. Run everything with Docker
+cd docker && docker-compose up --build
+
+# 4. Access portal at http://localhost:5000
+# Login: shipping_admin / secure_pass123
 ```
 
-### 3. Install Dependencies
-```bash
-# Install Nova Act automation dependencies
-pip install -r nova_act_automation/requirements.txt
+**📖 For detailed Docker instructions, see [DOCKER.md](DOCKER.md)**
 
-# Install demo portal dependencies
-pip install -r demo_vendor_portal/requirements.txt
-```
+### Option 2: Local Development
 
-### 4. Configure API Key
-Set your Nova Act API key as an environment variable:
+**Prerequisites:**
+- Python 3.8+
+- Nova Act API Key
+- Basic familiarity with command line
+
+**Setup:**
 ```bash
+# 1. Get Nova Act API Key
+# Visit nova.amazon.com → Act section → Generate API key
+
+# 2. Clone and Setup
+git clone <your-repo-url>
+cd Nova-Act-POC-
+
+# 3. Install Dependencies
+pip install -r src/automation/requirements.txt
+pip install -r src/portal/requirements.txt
+
+# 4. Configure API Key
 export NOVA_ACT_API_KEY=your-api-key-here
-```
 
-### 5. Start Demo Portal
-```bash
-cd demo_vendor_portal
+# 5. Start Demo Portal
+cd src/portal
 python app.py
-```
 
-### 6. Access Demo Portal
-- Open http://localhost:5000
-- Login with credentials:
-  - Username: `shipping_admin`
-  - Password: `secure_pass123`
-
-### 7. Run Automation
-```bash
-cd nova_act_automation
+# 6. Run Automation (in another terminal)
+cd src/automation
 python main.py
 ```
+
+**Access:**
+- Portal: http://localhost:5000
+- Login: `shipping_admin` / `secure_pass123`
 
 ## ⚙️ Advanced Automation Modes
 
@@ -147,7 +170,7 @@ This POC supports **dual automation modes** with intelligent processing:
 
 ### Mode 1: Manual Form Filling
 ```python
-# In nova_act_automation/main.py
+# In src/automation/main.py
 'use_manual_filling': True  # Set to True for manual mode
 ```
 
@@ -160,7 +183,7 @@ This POC supports **dual automation modes** with intelligent processing:
 
 ### Mode 2: Intelligent Auto-Fill (Default)
 ```python
-# In nova_act_automation/main.py
+# In src/automation/main.py
 'use_manual_filling': False  # Set to False for auto-fill mode
 ```
 
@@ -195,7 +218,7 @@ SUPPORTED_TYPES = {
 
 The POC handles **multiple JSON formats** intelligently:
 
-### Standard Format (`sample_data/shipment_data.json`)
+### Standard Format (`data/samples/shipment_data.json`)
 ```json
 {
   "shipper_name": "Global Shipping Solutions Inc.",
@@ -210,7 +233,7 @@ The POC handles **multiple JSON formats** intelligently:
 }
 ```
 
-### Nested Format (`sample_data/nested_shipment_data.json`)
+### Nested Format (`data/samples/nested_shipment_data.json`)
 ```json
 {
   "shipment": {
@@ -235,7 +258,7 @@ The POC handles **multiple JSON formats** intelligently:
 }
 ```
 
-### Alternative Format (`sample_data/alternative_format.json`)
+### Alternative Format (`data/samples/alternative_format.json`)
 ```json
 {
   "from_name": "Express Logistics LLC",

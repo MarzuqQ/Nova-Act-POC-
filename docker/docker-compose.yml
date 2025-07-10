@@ -1,0 +1,91 @@
+version: '3.8'
+
+services:
+  vendor-portal:
+    build:
+      context: ../src/portal
+      dockerfile: Dockerfile
+    container_name: nova-act-vendor-portal
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_ENV=production
+      - FLASK_DEBUG=false
+    volumes:
+      - ../data/uploads:/app/uploads
+      - ../data/submissions:/app/submissions
+    networks:
+      - nova-act-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
+    restart: unless-stopped
+
+  nova-act-automation:
+    build:
+      context: ../src/automation
+      dockerfile: Dockerfile
+    container_name: nova-act-automation
+    environment:
+      - PORTAL_URL=http://vendor-portal:5000
+      - PORTAL_USERNAME=${PORTAL_USERNAME:-shipping_admin}
+      - PORTAL_PASSWORD=${PORTAL_PASSWORD:-secure_pass123}
+      - NOVA_ACT_API_KEY=${NOVA_ACT_API_KEY}
+      - HEADLESS=true
+      - DATA_FILE=/app/data/samples/shipment_data.json
+      - UPLOAD_FILE=/app/data/samples/shipment_data.json
+      - TIMEOUT=${TIMEOUT:-300}
+      - USE_MANUAL_FILLING=${USE_MANUAL_FILLING:-false}
+    volumes:
+      - ../data:/app/data
+      - ../data/results:/app/results
+    depends_on:
+      vendor-portal:
+        condition: service_healthy
+    networks:
+      - nova-act-network
+    restart: "no"  # Run once and exit
+
+  # Optional: Run automation on a schedule
+  nova-act-scheduler:
+    build:
+      context: ../src/automation
+      dockerfile: Dockerfile
+    container_name: nova-act-scheduler
+    environment:
+      - PORTAL_URL=http://vendor-portal:5000
+      - PORTAL_USERNAME=${PORTAL_USERNAME:-shipping_admin}
+      - PORTAL_PASSWORD=${PORTAL_PASSWORD:-secure_pass123}
+      - NOVA_ACT_API_KEY=${NOVA_ACT_API_KEY}
+      - HEADLESS=true
+      - DATA_FILE=/app/data/samples/shipment_data.json
+      - UPLOAD_FILE=/app/data/samples/shipment_data.json
+      - TIMEOUT=${TIMEOUT:-300}
+      - USE_MANUAL_FILLING=${USE_MANUAL_FILLING:-false}
+    volumes:
+      - ../data:/app/data
+      - ../data/results:/app/results
+    depends_on:
+      vendor-portal:
+        condition: service_healthy
+    networks:
+      - nova-act-network
+    command: >
+      sh -c "
+        while true; do
+          echo 'Running scheduled automation...'
+          sleep 60
+          python3 main.py
+          echo 'Automation completed. Waiting 5 minutes before next run...'
+          sleep 300
+        done
+      "
+    restart: unless-stopped
+    profiles: ["scheduler"]  # Only run with --profile scheduler
+
+networks:
+  nova-act-network:
+    driver: bridge 

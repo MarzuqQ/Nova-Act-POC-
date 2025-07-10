@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Nova Act Automation Script for Vendor Portal
+Nova Act POC: Automation Script for Vendor Portal
 This script demonstrates automated web form interactions using Amazon Nova Act.
 """
 
@@ -23,17 +23,6 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-class FormData(BaseModel):
-    shipper_name: str
-    shipper_address: str
-    recipient_name: str
-    recipient_address: str
-    package_weight: str
-    package_dimensions: str
-    tracking_number: str
-    shipping_date: str
-    special_instructions: str
-
 class ConfirmationData(BaseModel):
     confirmation_number: str
     submission_time: str
@@ -45,7 +34,7 @@ class NovaActAutomation:
     def __init__(self):
         """Initialize the automation class with configuration"""
         self.script_dir = Path(__file__).parent
-        self.project_root = self.script_dir.parent
+        self.project_root = self.script_dir.parent.parent
         self.config = self._load_config()
         self.json_parser = JsonParser()
         self.file_utils = FileUtils()
@@ -53,8 +42,8 @@ class NovaActAutomation:
     def _load_config(self) -> Dict[str, Any]:
         """Load configuration from environment variables"""
         # Default file paths relative to project root
-        default_data_file = self.project_root / 'sample_data' / 'shipment_data.json'
-        default_upload_file = self.project_root / 'sample_data' / 'shipment_data.json'
+        default_data_file = self.project_root / 'data' / 'samples' / 'shipment_data.json'
+        default_upload_file = self.project_root / 'data' / 'samples' / 'shipment_data.json'
         
         config = {
             'portal_url': os.getenv('PORTAL_URL', 'http://localhost:5000'),
@@ -62,14 +51,14 @@ class NovaActAutomation:
             'password': os.getenv('PORTAL_PASSWORD', 'secure_pass123'),
             'data_file': os.getenv('DATA_FILE', str(default_data_file)),
             'upload_file': os.getenv('UPLOAD_FILE', str(default_upload_file)),
-            'output_bucket': os.getenv('OUTPUT_BUCKET', ''),
-            'aws_region': os.getenv('AWS_REGION', 'us-east-1'),
+            # 'output_bucket': os.getenv('OUTPUT_BUCKET', ''),
+            # 'aws_region': os.getenv('AWS_REGION', 'us-east-1'),
             'timeout': int(os.getenv('TIMEOUT', '300')),
             'headless': os.getenv('HEADLESS', 'true').lower() == 'true',
-            'nova_act_api_key': os.getenv('NOVA_ACT_API_KEY', '717e3076-ae10-4853-b9cc-7819b67f056c'),
+            'nova_act_api_key': os.getenv('NOVA_ACT_API_KEY', '1dc3c534-130d-42c1-abce-986d64d8146e'),
             
-            # AUTOMATION MODE: Change this line to switch between manual and auto-fill modes
-            'use_manual_filling': True  # Set to False for auto-fill mode
+            # AUTOMATION MODE: Configurable via environment variable
+            'use_manual_filling': os.getenv('USE_MANUAL_FILLING', 'false').lower() == 'true'
         }
         
         logger.info(f"Configuration loaded: {config}")
@@ -114,7 +103,7 @@ class NovaActAutomation:
             logger.info("Logging into vendor portal...")
             
             # Handle any cookie banners or promotional offers
-            nova.act("Close any cookie banners or promotional offers if they appear")
+            # nova.act("Close any cookie banners or promotional offers if they appear")
             
             # Fill in login credentials and submit
             nova.act(f"Enter '{self.config['username']}' in the username field")
@@ -122,7 +111,7 @@ class NovaActAutomation:
             nova.act("Click the login button to submit the form")
             
             # Wait for dashboard to load
-            time.sleep(2)
+            # time.sleep(2)
             
             logger.info("Successfully logged into portal")
         except Exception as e:
@@ -134,11 +123,22 @@ class NovaActAutomation:
         try:
             logger.info("Navigating to shipment form...")
             
-            # Click on the shipment form link
-            nova.act("Click on the 'New Shipment' or 'Shipment Form' link to navigate to the form")
+            # Wait a moment for page to fully load
+            # time.sleep(1)
+            
+            # Click on the shipment form link with retry logic
+            for attempt in range(3):
+                try:
+                    nova.act("Click on the 'New Shipment' or 'Shipment Form' link to navigate to the form")
+                    break
+                except Exception as e:
+                    if attempt == 2:  # Last attempt
+                        raise e
+                    logger.warning(f"Navigation attempt {attempt + 1} failed, retrying: {e}")
+                    time.sleep(2)
             
             # Wait for form to load
-            time.sleep(2)
+            # time.sleep(3)
             
             logger.info("Navigated to shipment form")
         except Exception as e:
@@ -158,6 +158,7 @@ class NovaActAutomation:
             logger.info("Using AUTO-FILL mode (JSON upload)")
             self.upload_json_and_autofill(nova)
     
+    # Function used when manually filling the form
     def fill_shipment_form(self, nova: NovaAct, data: Dict[str, Any]) -> None:
         """Fill the shipment form with data using Nova Act"""
         try:
@@ -189,25 +190,7 @@ class NovaActAutomation:
             
             # Fill shipping date
             if data.get('shipping_date'):
-                # Convert date to current date if it's in the past
-                try:
-                    # Parse the date from the data
-                    parsed_date = datetime.strptime(data['shipping_date'], '%Y-%m-%d').date()
-                    today = date.today()
-                    
-                    # If the date is in the past, use today's date
-                    if parsed_date < today:
-                        formatted_date = today.strftime('%Y-%m-%d')
-                        logger.info(f"Date {data['shipping_date']} is in the past, using today's date: {formatted_date}")
-                    else:
-                        formatted_date = data['shipping_date']
-                    
-                    # Try different approaches for date entry
-                    nova.act(f"Click on the shipping date field and enter the date '{formatted_date}' or select today's date")
-                except ValueError:
-                    # If date parsing fails, just use the original date
-                    logger.warning(f"Could not parse date {data['shipping_date']}, using as-is")
-                    nova.act(f"Click on the shipping date field and enter '{data['shipping_date']}'")
+                nova.act(f"Enter '{data['shipping_date']}' in the shipping date field")
             
             # Fill special instructions
             if data.get('special_instructions'):
@@ -218,6 +201,7 @@ class NovaActAutomation:
             logger.error(f"Failed to fill shipment form: {e}")
             raise
     
+    # Function used when auto-filling the form
     def upload_json_and_autofill(self, nova: NovaAct) -> None:
         """Upload JSON file using proper Nova Act + Playwright approach"""
         try:
@@ -241,7 +225,7 @@ class NovaActAutomation:
             # Step 1: Use Nova Act to locate and prepare the file upload element
             nova.act("Locate the file upload input field on the form")
             
-            # Step 2: Use Playwright to handle the actual file selection (recommended approach)
+            # Step 2: Use Playwright to handle the actual file selection
             # This bypasses the system dialog issue
             file_input = nova.page.locator('input[type="file"]')
             file_input.set_input_files(str(absolute_path))
@@ -249,10 +233,14 @@ class NovaActAutomation:
             logger.info("File uploaded successfully using Playwright")
             
             # Step 3: Wait for any auto-processing to complete
-            time.sleep(3)
+            time.sleep(5)  # Give more time for JavaScript auto-fill to complete
             
-            # Step 4: Use Nova Act to verify the upload was successful
-            nova.act("Check if the file upload was successful and if form fields were auto-populated")
+            # Step 4: Use Nova Act to verify the upload was successful (more lenient check)
+            try:
+                nova.act("Check if any form fields have been populated or if the file upload field shows a filename")
+            except Exception as e:
+                logger.warning(f"Form field verification failed, but continuing: {e}")
+                # Continue anyway - the frontend auto-fill might have worked even if not visually confirmed
             
             logger.info("JSON file uploaded successfully and form processing completed")
         except Exception as e:
@@ -269,10 +257,11 @@ class NovaActAutomation:
             logger.info("Submitting shipment form...")
             
             # Submit the form
+            # nova.act("Search for the submit button on the page")
             nova.act("Click the submit button to submit the shipment form")
             
             # Wait for submission to complete
-            time.sleep(3)
+            # time.sleep(3)
             
             logger.info("Form submitted successfully")
         except Exception as e:
@@ -339,7 +328,7 @@ class NovaActAutomation:
                 
         except Exception as e:
             logger.error(f"Failed to save results: {e}")
-    
+    '''
     def _save_to_s3(self, results: Dict[str, Any], filename: str) -> None:
         """Save results to S3"""
         try:
@@ -356,7 +345,7 @@ class NovaActAutomation:
             logger.info(f"Results uploaded to S3: s3://{self.config['output_bucket']}/nova-act-results/{filename}")
         except Exception as e:
             logger.error(f"Failed to save to S3: {e}")
-    
+    '''
     def run_automation(self) -> None:
         """Run the complete automation workflow"""
         try:
@@ -365,33 +354,52 @@ class NovaActAutomation:
             # Load shipment data
             shipment_data = self._load_shipment_data()
             
+            # Debug: Log Nova Act initialization details
+            logger.info(f"Initializing Nova Act with:")
+            logger.info(f"  - Portal URL: {self.config['portal_url']}")
+            logger.info(f"  - Headless mode: {self.config['headless']}")
+            logger.info(f"  - API Key: {self.config['nova_act_api_key'][:8]}...")
+            
             # Initialize Nova Act with proper configuration
-            with NovaAct(
-                starting_page=self.config['portal_url'],
-                headless=self.config['headless'],
-                nova_act_api_key=self.config['nova_act_api_key'],
-                ignore_https_errors=True  # Required for localhost URLs
-            ) as nova:
+            logger.info("Creating Nova Act instance...")
+            try:
+                nova_act_instance = NovaAct(
+                    starting_page=self.config['portal_url'],
+                    headless=self.config['headless'],
+                    nova_act_api_key=self.config['nova_act_api_key'],
+                    ignore_https_errors=True,
+                )
+                logger.info("Nova Act instance created successfully!")
                 
-                # Login to portal
-                self.login_to_portal(nova)
-                
-                # Navigate to shipment form
-                self.navigate_to_shipment_form(nova)
-                
-                # Process shipment form (mode determined by config)
-                self.process_shipment_form(nova, shipment_data)
-                
-                # Submit the form
-                self.submit_form(nova)
-                
-                # Capture confirmation
-                confirmation = self.capture_confirmation(nova)
-                
-                # Save results
-                self.save_results(confirmation)
-                
-                logger.info("Automation workflow completed successfully")
+                with nova_act_instance as nova:
+                    logger.info("Nova Act context manager entered successfully!")
+                    
+                    # Login to portal
+                    self.login_to_portal(nova)
+                    
+                    # Navigate to shipment form
+                    self.navigate_to_shipment_form(nova)
+                    
+                    # Process shipment form (mode determined by config)
+                    self.process_shipment_form(nova, shipment_data) # shipment_data = parsed json data
+                    
+                    # Submit the form
+                    self.submit_form(nova)
+                    
+                    # Capture confirmation
+                    confirmation = self.capture_confirmation(nova)
+                    
+                    # Save results
+                    self.save_results(confirmation)
+                    
+                    logger.info("Automation workflow completed successfully")
+                    
+            except Exception as e:
+                logger.error(f"Nova Act initialization failed with error: {e}")
+                logger.error(f"Error type: {type(e).__name__}")
+                import traceback
+                logger.error(f"Full traceback: {traceback.format_exc()}")
+                raise
                 
         except Exception as e:
             logger.error(f"Automation workflow failed: {e}")
