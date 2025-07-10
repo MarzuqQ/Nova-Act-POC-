@@ -359,7 +359,8 @@ class NovaActAutomation:
                 starting_page=self.config['portal_url'],
                 headless=self.config['headless'],
                 nova_act_api_key=self.config['nova_act_api_key'],
-                ignore_https_errors=True  # Required for localhost URLs
+                ignore_https_errors=True,  # Required for localhost URLs
+                preview={"playwright_actuation": True}  # Enable faster playwright actuation
             ) as nova:
                 
                 # Login to portal
