@@ -96,9 +96,6 @@ Nova-Act-POC-/
 │   ├── uploads/                 # File uploads (shared between services)
 │   ├── submissions/             # Form submissions (shared between services)
 │   └── results/                 # Automation results (shared between services)
-└── examples/                    # Example scripts and tests
-    ├── simple_nova_act_example.py # Comprehensive Nova Act examples
-    └── test_nova_act.py         # Basic SDK testing
 ```
 
 ## 🚀 Quick Start
@@ -337,19 +334,9 @@ result = nova.act(
 - **Local storage** with optional S3 integration
 - **Detailed logging** for debugging and monitoring
 
-## 🔍 Testing & Examples
+## 🔍 Testing
 
-### Basic Testing
-```bash
-# Test Nova Act SDK functionality
-cd examples
-python test_nova_act.py
-
-# Run comprehensive examples
-python simple_nova_act_example.py
-```
-
-### Advanced Testing
+### Testing the Application
 ```bash
 # Test with different JSON formats
 cd nova_act_automation
