@@ -9,7 +9,6 @@
       "upload_file": "/Users/marzuqq/Documents/Nova-Act-POC-/data/samples/shipment_data.json",
       "timeout": 300,
       "headless": false,
-      "nova_act_api_key": "717e3076-ae10-4853-b9cc-7819b67f056c",
       "use_manual_filling": false
     },
     "confirmation": {
