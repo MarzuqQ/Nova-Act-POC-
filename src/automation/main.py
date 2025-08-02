@@ -55,7 +55,7 @@ class NovaActAutomation:
             # 'aws_region': os.getenv('AWS_REGION', 'us-east-1'),
             'timeout': int(os.getenv('TIMEOUT', '300')),
             'headless': os.getenv('HEADLESS', 'true').lower() == 'true',
-            'nova_act_api_key': os.getenv('NOVA_ACT_API_KEY', '1dc3c534-130d-42c1-abce-986d64d8146e'),
+            'nova_act_api_key': os.getenv('NOVA_ACT_API_KEY', 'YOUR-API-KEY'),
             
             # AUTOMATION MODE: Configurable via environment variable
             'use_manual_filling': os.getenv('USE_MANUAL_FILLING', 'false').lower() == 'true'
